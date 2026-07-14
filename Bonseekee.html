@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aprendendo com Bonseekee</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #111827;
+      color: white;
+    }
+
+    header {
+      background: #1f2937;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #374151;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    button, select, input {
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    button {
+      cursor: pointer;
+      background: #22c55e;
+      color: #052e16;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.04);
+      background: #4ade80;
+    }
+
+    .danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .secondary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .yellow {
+      background: #facc15;
+      color: #422006;
+    }
+
+    .screen {
+      display: none;
+      padding: 25px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .card {
+      background: #1f2937;
+      border: 2px solid #374151;
+      border-radius: 20px;
+      padding: 20px;
+      margin: 15px 0;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .auth-box {
+      max-width: 420px;
+      margin: 30px auto;
+    }
+
+    input, select {
+      width: 100%;
+      margin: 8px 0;
+      background: #374151;
+      color: white;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .lesson-card {
+      background: #111827;
+      border: 2px solid #374151;
+      padding: 18px;
+      border-radius: 18px;
+    }
+
+    .lesson-card h3 {
+      margin-top: 0;
+    }
+
+    .coins {
+      color: #facc15;
+      font-weight: bold;
+    }
+
+    .xp {
+      color: #60a5fa;
+      font-weight: bold;
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      background: #374151;
+      color: white;
+      text-align: left;
+    }
+
+    .answers button:hover {
+      background: #4b5563;
+    }
+
+    .correct {
+      background: #22c55e !important;
+      color: #052e16 !important;
+    }
+
+    .wrong {
+      background: #ef4444 !important;
+      color: white !important;
+    }
+
+    .mascot {
+      font-size: 70px;
+      margin: 10px;
+    }
+
+    .assistant-message {
+      background: #111827;
+      border-left: 5px solid #22c55e;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+
+    .question-button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      background: #374151;
+      color: white;
+      text-align: left;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1 id="appTitle">Aprendendo com Bonseekee</h1>
+
+    <div>
+      <select id="languageSelect" onchange="changeLanguage()">
+        <option value="en">English</option>
+        <option value="pt">Português</option>
+      </select>
+    </div>
+  </header>
+
+  <main id="welcomeScreen" class="screen active">
+    <div class="card center">
+      <div class="mascot">🐱</div>
+
+      <h2 id="welcomeTitle">Learn logic, physics and robotics with Bonseekee!</h2>
+
+      <p id="welcomeText">
+        Complete lessons, earn coins and ask Bonseekee for help.
+      </p>
+
+      <button onclick="showScreen('loginScreen')" id="loginBtn">Login</button>
+      <button onclick="showScreen('signupScreen')" class="secondary" id="signupBtn">Create account</button>
+    </div>
+  </main>
+
+  <main id="loginScreen" class="screen">
+    <div class="card auth-box">
+      <h2 id="loginTitle">Login</h2>
+
+      <input id="loginUsername" placeholder="Username">
+      <input id="loginPassword" type="password" placeholder="Password">
+
+      <button onclick="login()" id="loginConfirmBtn">Enter</button>
+      <button onclick="showScreen('welcomeScreen')" class="danger" id="backBtn1">Back</button>
+
+      <p id="loginMessage"></p>
+    </div>
+  </main>
+
+  <main id="signupScreen" class="screen">
+    <div class="card auth-box">
+      <h2 id="signupTitle">Create account</h2>
+
+      <input id="signupUsername" placeholder="Username">
+      <input id="signupPassword" type="password" placeholder="Password">
+
+      <button onclick="signup()" id="signupConfirmBtn">Create</button>
+      <button onclick="showScreen('welcomeScreen')" class="danger" id="backBtn2">Back</button>
+
+      <p id="signupMessage"></p>
+    </div>
+  </main>
+
+  <main id="dashboardScreen" class="screen">
+    <div class="card">
+      <h2 id="helloText">Hello, student!</h2>
+
+      <p>
+        <span id="coinsText">Coins:</span>
+        <span class="coins" id="coinsAmount">0</span>
+        🪙
+      </p>
+
+      <p>
+        XP:
+        <span class="xp" id="xpAmount">0</span>
+        ⚡
+      </p>
+
+      <button onclick="logout()" class="danger" id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="card">
+      <h2 id="subjectsTitle">Subjects</h2>
+
+      <div class="grid">
+        <div class="lesson-card">
+          <h3 id="logicTitle">Logic</h3>
+          <p id="logicDesc">Learn how to think like a programmer.</p>
+          <button onclick="startLesson('logic')" id="logicBtn">Start lesson</button>
+        </div>
+
+        <div class="lesson-card">
+          <h3 id="physicsTitle">Physics</h3>
+          <p id="physicsDesc">Understand movement, force and gravity.</p>
+          <button onclick="startLesson('physics')" id="physicsBtn">Start lesson</button>
+        </div>
+
+        <div class="lesson-card">
+          <h3 id="roboticsTitle">Robotics</h3>
+          <p id="roboticsDesc">Learn sensors, motors and commands.</p>
+          <button onclick="startLesson('robotics')" id="roboticsBtn">Start lesson</button>
+        </div>
+
+        <div class="lesson-card">
+          <h3 id="codingTitle">Coding</h3>
+          <p id="codingDesc">Practice variables, loops and conditions.</p>
+          <button onclick="startLesson('coding')" id="codingBtn">Start lesson</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="assistantTitle">Bonseekee Assistant</h2>
+
+      <div class="mascot">🐱</div>
+
+      <div class="assistant-message" id="assistantAnswer">
+        Hi! I'm Bonseekee. Ask me something!
+      </div>
+
+      <button class="question-button" onclick="askAssistant('logic')" id="askLogic">
+        What is logic?
+      </button>
+
+      <button class="question-button" onclick="askAssistant('physics')" id="askPhysics">
+        What is physics?
+      </button>
+
+      <button class="question-button" onclick="askAssistant('robotics')" id="askRobotics">
+        What is robotics?
+      </button>
+
+      <button class="question-button" onclick="askAssistant('coins')" id="askCoins">
+        How do coins work?
+      </button>
+    </div>
+  </main>
+
+  <main id="lessonScreen" class="screen">
+    <div class="card">
+      <h2 id="lessonSubject">Lesson</h2>
+
+      <p class="question" id="questionText">Question here</p>
+
+      <div class="answers" id="answersBox"></div>
+
+      <p id="lessonFeedback"></p>
+
+      <button onclick="showScreen('dashboardScreen')" class="danger" id="leaveLessonBtn">
+        Leave lesson
+      </button>
+    </div>
+  </main>
+
+  <footer>
+    <p>Aprendendo com Bonseekee — no ads, only learning 🐱</p>
+  </footer>
+
+  <script>
+    let language = localStorage.getItem("language") || "en";
+    let currentUser = localStorage.getItem("currentUser") || null;
+    let currentLesson = null;
+    let currentQuestionIndex = 0;
+
+    const texts = {
+      en: {
+        appTitle: "Aprendendo com Bonseekee",
+        welcomeTitle: "Learn logic, physics and robotics with Bonseekee!",
+        welcomeText: "Complete lessons, earn coins and ask Bonseekee for help.",
+        loginBtn: "Login",
+        signupBtn: "Create account",
+        loginTitle: "Login",
+        signupTitle: "Create account",
+        loginConfirmBtn: "Enter",
+        signupConfirmBtn: "Create",
+        backBtn1: "Back",
+        backBtn2: "Back",
+        helloText: "Hello, student!",
+        coinsText: "Coins:",
+        logoutBtn: "Logout",
+        subjectsTitle: "Subjects",
+        logicTitle: "Logic",
+        logicDesc: "Learn how to think like a programmer.",
+        physicsTitle: "Physics",
+        physicsDesc: "Understand movement, force and gravity.",
+        roboticsTitle: "Robotics",
+        roboticsDesc: "Learn sensors, motors and commands.",
+        codingTitle: "Coding",
+        codingDesc: "Practice variables, loops and conditions.",
+        logicBtn: "Start lesson",
+        physicsBtn: "Start lesson",
+        roboticsBtn: "Start lesson",
+        codingBtn: "Start lesson",
+        assistantTitle: "Bonseekee Assistant",
+        askLogic: "What is logic?",
+        askPhysics: "What is physics?",
+        askRobotics: "What is robotics?",
+        askCoins: "How do coins work?",
+        leaveLessonBtn: "Leave lesson",
+        correct: "Correct! You earned 60 coins and 90 XP!",
+        wrong: "Oops! Not this one.",
+        finished: "Lesson finished! Great job!",
+        userCreated: "Account created!",
+        userExists: "This username already exists.",
+        invalidLogin: "Wrong username or password.",
+        emptyFields: "Fill in all fields.",
+        assistantStart: "Hi! I'm Bonseekee. Ask me something!"
+      },
+
+      pt: {
+        appTitle: "Aprendendo com Bonseekee",
+        welcomeTitle: "Aprenda lógica, física e robótica com Bonseekee!",
+        welcomeText: "Complete lições, ganhe moedas e peça ajuda ao Bonseekee.",
+        loginBtn: "Entrar",
+        signupBtn: "Criar conta",
+        loginTitle: "Entrar",
+        signupTitle: "Criar conta",
+        loginConfirmBtn: "Entrar",
+        signupConfirmBtn: "Criar",
+        backBtn1: "Voltar",
+        backBtn2: "Voltar",
+        helloText: "Olá, estudante!",
+        coinsText: "Moedas:",
+        logoutBtn: "Sair",
+        subjectsTitle: "Matérias",
+        logicTitle: "Lógica",
+        logicDesc: "Aprenda a pensar como um programador.",
+        physicsTitle: "Física",
+        physicsDesc: "Entenda movimento, força e gravidade.",
+        roboticsTitle: "Robótica",
+        roboticsDesc: "Aprenda sensores, motores e comandos.",
+        codingTitle: "Programação",
+        codingDesc: "Pratique variáveis, loops e condições.",
+        logicBtn: "Começar lição",
+        physicsBtn: "Começar lição",
+        roboticsBtn: "Começar lição",
+        codingBtn: "Começar lição",
+        assistantTitle: "Assistente Bonseekee",
+        askLogic: "O que é lógica?",
+        askPhysics: "O que é física?",
+        askRobotics: "O que é robótica?",
+        askCoins: "Como funcionam as moedas?",
+        leaveLessonBtn: "Sair da lição",
+        correct: "Correto! Você ganhou 60 moedas e 90 XP!",
+        wrong: "Opa! Não é essa.",
+        finished: "Lição finalizada! Mandou bem!",
+        userCreated: "Conta criada!",
+        userExists: "Esse nome de usuário já existe.",
+        invalidLogin: "Usuário ou senha incorretos.",
+        emptyFields: "Preencha todos os campos.",
+        assistantStart: "Oi! Eu sou Bonseekee. Me pergunte alguma coisa!"
+      }
+    };
+
+    const assistantAnswers = {
+      en: {
+        logic: "Logic is the art of thinking step by step. In programming, it helps you decide what happens if something is true or false.",
+        physics: "Physics explains how the world moves. Gravity, speed, force and energy are all part of physics.",
+        robotics: "Robotics is about creating machines that can follow commands, use sensors and move with motors.",
+        coins: "Coins are rewards. Every correct answer gives you 60 coins. Later, they could be used to buy skins, themes or mascot items."
+      },
+
+      pt: {
+        logic: "Lógica é a arte de pensar passo por passo. Na programação, ela ajuda a decidir o que acontece se algo for verdadeiro ou falso.",
+        physics: "Física explica como o mundo se move. Gravidade, velocidade, força e energia fazem parte da física.",
+        robotics: "Robótica é sobre criar máquinas que seguem comandos, usam sensores e se movem com motores.",
+        coins: "Moedas são recompensas. Cada resposta correta dá 60 moedas. Depois, elas poderiam servir para comprar skins, temas ou itens para o mascote."
+      }
+    };
+
+    const lessons = {
+      logic: {
+        en: [
+          {
+            q: "What does an IF command do?",
+            a: ["Repeats forever", "Checks a condition", "Deletes a variable", "Draws a robot"],
+            correct: 1
+          },
+          {
+            q: "Which answer is a logical value?",
+            a: ["True", "Banana", "Motor", "Gravity"],
+            correct: 0
+          }
+        ],
+
+        pt: [
+          {
+            q: "O que um comando SE faz?",
+            a: ["Repete para sempre", "Verifica uma condição", "Apaga uma variável", "Desenha um robô"],
+            correct: 1
+          },
+          {
+            q: "Qual resposta é um valor lógico?",
+            a: ["Verdadeiro", "Banana", "Motor", "Gravidade"],
+            correct: 0
+          }
+        ]
+      },
+
+      physics: {
+        en: [
+          {
+            q: "What pulls objects toward Earth?",
+            a: ["Electricity", "Gravity", "Wi-Fi", "Code"],
+            correct: 1
+          },
+          {
+            q: "If a ball moves faster, its speed is...",
+            a: ["Lower", "Zero", "Higher", "Invisible"],
+            correct: 2
+          }
+        ],
+
+        pt: [
+          {
+            q: "O que puxa os objetos para a Terra?",
+            a: ["Eletricidade", "Gravidade", "Wi-Fi", "Código"],
+            correct: 1
+          },
+          {
+            q: "Se uma bola se move mais rápido, sua velocidade é...",
+            a: ["Menor", "Zero", "Maior", "Invisível"],
+            correct: 2
+          }
+        ]
+      },
+
+      robotics: {
+        en: [
+          {
+            q: "What can a sensor do?",
+            a: ["Detect information", "Eat coins", "Sleep", "Become a sandwich"],
+            correct: 0
+          },
+          {
+            q: "What usually makes robot wheels move?",
+            a: ["A motor", "A pencil", "A cloud", "A banana"],
+            correct: 0
+          }
+        ],
+
+        pt: [
+          {
+            q: "O que um sensor pode fazer?",
+            a: ["Detectar informações", "Comer moedas", "Dormir", "Virar um sanduíche"],
+            correct: 0
+          },
+          {
+            q: "O que geralmente faz as rodas de um robô se moverem?",
+            a: ["Um motor", "Um lápis", "Uma nuvem", "Uma banana"],
+            correct: 0
+          }
+        ]
+      },
+
+      coding: {
+        en: [
+          {
+            q: "What is a variable?",
+            a: ["A place to store data", "A type of bird", "A bug only", "A screen"],
+            correct: 0
+          },
+          {
+            q: "What does a loop do?",
+            a: ["Stops the game", "Repeats commands", "Deletes the site", "Changes language"],
+            correct: 1
+          }
+        ],
+
+        pt: [
+          {
+            q: "O que é uma variável?",
+            a: ["Um lugar para guardar dados", "Um tipo de pássaro", "Apenas um bug", "Uma tela"],
+            correct: 0
+          },
+          {
+            q: "O que um loop faz?",
+            a: ["Para o jogo", "Repete comandos", "Apaga o site", "Muda o idioma"],
+            correct: 1
+          }
+        ]
+      }
+    };
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+      });
+
+      document.getElementById(id).classList.add("active");
+    }
+
+    function changeLanguage() {
+      language = document.getElementById("languageSelect").value;
+      localStorage.setItem("language", language);
+      updateTexts();
+    }
+
+    function updateTexts() {
+      document.getElementById("languageSelect").value = language;
+
+      const t = texts[language];
+
+      for (let key in t) {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = t[key];
+        }
+      }
+
+      const assistant = document.getElementById("assistantAnswer");
+      if (assistant) {
+        assistant.textContent = t.assistantStart;
+      }
+
+      updateUserInfo();
+    }
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem("users")) || {};
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function signup() {
+      const username = document.getElementById("signupUsername").value.trim();
+      const password = document.getElementById("signupPassword").value.trim();
+      const msg = document.getElementById("signupMessage");
+      const users = getUsers();
+
+      if (!username || !password) {
+        msg.textContent = texts[language].emptyFields;
+        return;
+      }
+
+      if (users[username]) {
+        msg.textContent = texts[language].userExists;
+        return;
+      }
+
+      users[username] = {
+        password: password,
+        coins: 0,
+        xp: 0
+      };
+
+      saveUsers(users);
+
+      msg.textContent = texts[language].userCreated;
+
+      localStorage.setItem("currentUser", username);
+      currentUser = username;
+
+      updateUserInfo();
+      showScreen("dashboardScreen");
+    }
+
+    function login() {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      const msg = document.getElementById("loginMessage");
+      const users = getUsers();
+
+      if (!username || !password) {
+        msg.textContent = texts[language].emptyFields;
+        return;
+      }
+
+      if (!users[username] || users[username].password !== password) {
+        msg.textContent = texts[language].invalidLogin;
+        return;
+      }
+
+      localStorage.setItem("currentUser", username);
+      currentUser = username;
+
+      updateUserInfo();
+      showScreen("dashboardScreen");
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      currentUser = null;
+      showScreen("welcomeScreen");
+    }
+
+    function updateUserInfo() {
+      if (!currentUser) return;
+
+      const users = getUsers();
+      const user = users[currentUser];
+
+      if (!user) return;
+
+      document.getElementById("helloText").textContent =
+        language === "pt"
+          ? "Olá, " + currentUser + "!"
+          : "Hello, " + currentUser + "!";
+
+      document.getElementById("coinsAmount").textContent = user.coins;
+      document.getElementById("xpAmount").textContent = user.xp;
+    }
+
+    function startLesson(subject) {
+      currentLesson = subject;
+      currentQuestionIndex = 0;
+
+      const subjectNames = {
+        logic: {
+          en: "Logic",
+          pt: "Lógica"
+        },
+        physics: {
+          en: "Physics",
+          pt: "Física"
+        },
+        robotics: {
+          en: "Robotics",
+          pt: "Robótica"
+        },
+        coding: {
+          en: "Coding",
+          pt: "Programação"
+        }
+      };
+
+      document.getElementById("lessonSubject").textContent =
+        subjectNames[subject][language];
+
+      showScreen("lessonScreen");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const questionData = lessons[currentLesson][language][currentQuestionIndex];
+
+      document.getElementById("questionText").textContent = questionData.q;
+      document.getElementById("lessonFeedback").textContent = "";
+
+      const answersBox = document.getElementById("answersBox");
+      answersBox.innerHTML = "";
+
+      questionData.a.forEach((answer, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.onclick = () => checkAnswer(index, btn);
+        answersBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(answerIndex, button) {
+      const questionData = lessons[currentLesson][language][currentQuestionIndex];
+      const feedback = document.getElementById("lessonFeedback");
+
+      const buttons = document.querySelectorAll("#answersBox button");
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (answerIndex === questionData.correct) {
+        button.classList.add("correct");
+        feedback.textContent = texts[language].correct;
+
+        giveReward(60, 90);
+      } else {
+        button.classList.add("wrong");
+        feedback.textContent = texts[language].wrong;
+      }
+
+      setTimeout(() => {
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex >= lessons[currentLesson][language].length) {
+          feedback.textContent = texts[language].finished;
+          showScreen("dashboardScreen");
+        } else {
+          loadQuestion();
+        }
+      }, 1200);
+    }
+
+    function giveReward(coins, xp) {
+      const users = getUsers();
+
+      users[currentUser].coins += coins;
+      users[currentUser].xp += xp;
+
+      saveUsers(users);
+      updateUserInfo();
+    }
+
+    function askAssistant(topic) {
+      document.getElementById("assistantAnswer").textContent =
+        assistantAnswers[language][topic];
+    }
+
+    updateTexts();
+
+    if (currentUser) {
+      showScreen("dashboardScreen");
+    }
+  </script>
+
+</body>
+</html>
